@@ -2,6 +2,9 @@ import sys
 import ssl
 import socket
 
+import tkinter
+
+
 def request(url):
     scheme, url = url.split("://", 1)
     assert scheme in ["http", "https"], "Unknown scheme {}".format(scheme)
@@ -50,7 +53,8 @@ def request(url):
 
     return response_headers, body
 
-def show(body):
+def lex(body):
+    text = ""
     in_angle = False
     for c in body:
         if c == "<":
@@ -58,13 +62,70 @@ def show(body):
         elif c == ">":
             in_angle = False
         elif not in_angle:
-            print(c, end="")
+            text += c
+
+    return text
 
 
 def load(url):
-    headers, body = request(url)
     show(body)
 
 
+class Browser:
+    WIDTH, HEIGHT = 800, 600
+    HSTEP, VSTEP = 13, 18
+    SCROLL_STEP = 100
+
+    def __init__(self):
+        self.window = tkinter.Tk()
+        self.canvas = tkinter.Canvas(
+            self.window,
+            width=self.WIDTH,
+            height=self.HEIGHT
+        )
+        self.canvas.pack()
+
+        self.scroll = 0
+        self.window.bind("<Down>", self.__scrolldown)
+        self.window.bind("<Up>", self.__scrollup)
+
+    def __layout(self, text):
+        display_list = []
+        cursor_x, cursor_y = self.HSTEP, self.VSTEP
+        for c in text:
+            display_list.append((cursor_x, cursor_y, c))
+            cursor_x += self.HSTEP
+            if cursor_x >= self.WIDTH - self.HSTEP:
+                cursor_y += self.VSTEP
+                cursor_x = self.HSTEP
+
+        return display_list
+
+    def __scrolldown(self, e):
+        self.scroll += self.SCROLL_STEP
+        self.draw()
+
+    def __scrollup(self, e):
+        self.scroll -= self.SCROLL_STEP
+        self.draw()
+
+
+    def draw(self):
+        self.canvas.delete("all")
+        for x, y, c in self.display_list:
+            if y > self.scroll + self.HEIGHT: continue
+            if y + self.VSTEP < self.scroll: continue
+            self.canvas.create_text(x, y - self.scroll, text=c)
+
+    def load(self, url):
+        headers, body = request(url)
+
+        text = lex(body)
+        self.display_list = self.__layout(text)
+        self.draw()
+
+
 if __name__ == "__main__":
-    load(sys.argv[1])
+    import sys
+    Browser().load(sys.argv[1])
+    tkinter.mainloop()
