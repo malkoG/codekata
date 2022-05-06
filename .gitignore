@@ -10,3 +10,4 @@ generated-docs/
 .spago
 db.sqlite3
 geckodriver.log
+__pycache__
