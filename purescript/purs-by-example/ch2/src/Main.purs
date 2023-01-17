@@ -3,7 +3,7 @@ module Solution (diagonal, answer) where
 import Data.List (range, filter)
 import Data.Foldable (sum)
 
-import Math (sqrt)
+import Data.Number (sqrt)
 
 import Prelude
 

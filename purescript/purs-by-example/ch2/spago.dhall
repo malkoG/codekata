@@ -16,7 +16,7 @@ to generate this file without the comments in this block.
   , "effect"
   , "foldable-traversable"
   , "lists"
-  , "math"
+  , "numbers"
   , "prelude"
   , "psci-support"
   , "test-unit"
