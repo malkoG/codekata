@@ -11,3 +11,7 @@ generated-docs/
 db.sqlite3
 geckodriver.log
 __pycache__
+
+.gradle
+.idea
+build
