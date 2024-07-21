@@ -1,4 +1,4 @@
 (executable
- (public_name cis194)
- (name main)
+ (public_name hw1)
+ (name hw1)
  (libraries cis194))
