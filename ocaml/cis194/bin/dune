@@ -1,0 +1,4 @@
+(executable
+ (public_name cis194)
+ (name main)
+ (libraries cis194))
